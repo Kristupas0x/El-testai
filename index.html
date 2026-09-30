@@ -138,26 +138,35 @@
             max-width: 500px;
         }
 
+        /* NAUJAS GRUPAVIMO DIZAINAS PRADŽIOS EKRANUI */
         .topic-panel {
-            background: var(--nav-bg);
-            padding: 18px;
-            border-radius: 12px;
+            padding: 0;
             margin: 20px auto;
             max-width: 650px;
-            border: 1px solid var(--border);
         }
 
         .topic-title {
-            font-size: 15px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        .topic-section-title {
-            font-size: 13px;
+        .subject-group {
+            background: var(--nav-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .subject-group-title {
+            font-size: 15px;
             font-weight: 700;
-            color: var(--text-muted);
-            margin: 14px 0 8px;
+            color: var(--primary);
+            margin-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
         }
 
         .topic-list {
@@ -199,29 +208,38 @@
         }
 
         .selection-summary {
-            margin-top: 12px;
-            font-size: 13px;
+            margin-top: 15px;
+            font-size: 14px;
+            text-align: center;
             color: var(--text-muted);
             line-height: 1.4;
         }
 
         .selection-actions {
             display: flex;
-            gap: 8px;
-            margin-top: 10px;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
         }
 
         .mini-btn {
             background: var(--container-bg);
             color: var(--text-main);
             border: 1px solid var(--border);
-            padding: 8px 12px;
-            font-size: 13px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
         .mini-btn:hover:not(:disabled) {
             background: var(--selected);
+            border-color: var(--primary);
+            color: var(--primary);
         }
+
         .stats-title {
             font-size: 14px;
             font-weight: 600;
@@ -267,7 +285,6 @@
             margin-top: 5px;
         }
 
-        /* Klausimų sąrašo tinklelis - APTEKTA: minmax apsaugo nuo lindimo po scrollbar */
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -276,10 +293,9 @@
             max-height: 380px; 
             overflow-y: auto; 
             overflow-x: hidden; 
-            padding-right: 15px; /* Padidintas tarpas slinkties juostai */
+            padding-right: 15px;
         }
 
-        /* Modernus slinkties juostos dizainas */
         .nav-grid::-webkit-scrollbar {
             width: 6px;
         }
@@ -412,44 +428,15 @@
         .pass { background-color: var(--success); }
         .fail { background-color: var(--danger); }
 
-        /* ---------- SPRENDIMAI MOBILIEMS ĮRENGINIAMS ---------- */
         @media (max-width: 768px) {
-            .layout { 
-                flex-direction: column; 
-            }
-            .sidebar { 
-                position: static; 
-                width: 100%; 
-                align-self: stretch; 
-                margin-top: 30px;
-            }
-            .nav-grid { 
-                max-height: 220px; 
-                padding-right: 15px; /* Užtikrinamas saugus plotis ir telefone */
-            }
-            .nav-controls button {
-                white-space: nowrap; 
-                flex: 1; 
-                text-align: center;
-                font-size: 14px;
-                padding: 12px 5px;
-            }
-            /* PATAISYMAS: Sukuria tuščią vietą dešinėje, kad laikmatis neatsidurtų po temos mygtuku */
-            .header-stats {
-                padding-right: 60px; 
-            }
-            /* Šiek tiek pastumiam patį mygtuką, kad telefone idealiai įsitaisytų kampe */
-            .theme-toggle {
-                top: 15px;
-                right: 15px;
-            }
-            .selection-actions {
-                flex-direction: column;
-            }
-
-            .topic-checkbox {
-                align-items: flex-start;
-            }
+            .layout { flex-direction: column; }
+            .sidebar { position: static; width: 100%; align-self: stretch; margin-top: 30px; }
+            .nav-grid { max-height: 220px; padding-right: 15px; }
+            .nav-controls button { white-space: nowrap; flex: 1; text-align: center; font-size: 14px; padding: 12px 5px; }
+            .header-stats { padding-right: 60px; }
+            .theme-toggle { top: 15px; right: 15px; }
+            .selection-actions { flex-direction: column; }
+            .topic-checkbox { align-items: flex-start; }
         }
     </style>
 </head>
@@ -465,22 +452,34 @@
         </p>
         
         <div class="topic-panel">
-            <div class="topic-title">Pasirinkite, iš kurių klausimų norite sudaryti testą</div>
+            <div class="topic-title">Pasirinkite, iš kurių temų norite sudaryti testą</div>
 
-            <div class="topic-section-title">Elektrikų egzaminas – profesinė mokykla</div>
-            <div class="topic-list">
-                <label class="topic-checkbox" id="mano-label">
-                    <input type="checkbox" id="source-mano" checked>
-                    <span>Elektrikų egzaminas – profesinė mokykla</span>
-                    <span class="topic-count" id="mano-count">0 klaus.</span>
-                </label>
+            <!-- 1 Blokas: Profesinės mokyklos baigiamasis -->
+            <div class="subject-group">
+                <div class="subject-group-title">Bendra profesijos bazė</div>
+                <div class="topic-list">
+                    <label class="topic-checkbox" id="mano-label">
+                        <input type="checkbox" id="source-mano">
+                        <span>Elektrikų egzaminas – profesinė mokykla</span>
+                        <span class="topic-count" id="mano-count">0 klaus.</span>
+                    </label>
+                </div>
             </div>
 
-            <div class="topic-section-title">Elektros energijos gamybos technologijos – paskaitų temos</div>
-            <div class="topic-list" id="lecture-topic-list"></div>
+            <!-- 2 Blokas: Gamybos technologijos -->
+            <div class="subject-group">
+                <div class="subject-group-title">Elektros energijos gamybos technologijos</div>
+                <div class="topic-list" id="lecture-topic-list"></div>
+            </div>
+
+            <!-- 3 Blokas: Elektrotechninės medžiagos -->
+            <div class="subject-group">
+                <div class="subject-group-title">Elektrotechninės medžiagos</div>
+                <div class="topic-list" id="materials-topic-list"></div>
+            </div>
 
             <div class="selection-actions">
-                <button type="button" class="mini-btn" onclick="selectAllLectureTopics(true)">Pažymėti visas paskaitų temas</button>
+                <button type="button" class="mini-btn" onclick="selectAllSources(true)">Pažymėti viską</button>
                 <button type="button" class="mini-btn" onclick="selectAllSources(false)">Išvalyti pasirinkimą</button>
             </div>
 
@@ -559,11 +558,11 @@
 </div>
 
 <script>
-    // Klausimai laikomi atskirais šaltiniais, kad profesinės mokyklos egzamininiai
-    // klausimai nesusimaišytų su paskaitų temomis.
     let manoKlausimai = [];
     let paskaituKlausimai = [];
+    let medziaguKlausimai = [];
     let paskaituTemos = [];
+    let medziaguTemos = [];
     let testKlausimai = [];
     let pasirinktiAtsakymai = [];
     let pazymetiKlausimai = []; 
@@ -602,15 +601,15 @@
         const status = document.getElementById('db-status');
         const startBtn = document.getElementById('start-btn');
 
-        const [manoRez, paskaituRez] = await Promise.all([
-            // Naujas aiškus vardas, bet suderinamumas su tavo senu klausimai.json
-            // išlieka.
+        const [manoRez, paskaituRez, medziaguRez] = await Promise.all([
             loadJsonFirstAvailable(['prof_egzaminas.json']),
-            loadJsonFirstAvailable(['elektros_energetika.json'])
+            loadJsonFirstAvailable(['elektros_energetika.json']),
+            loadJsonFirstAvailable(['elektrotechnines_medziagos_klausimai.json'])
         ]);
 
         manoKlausimai = manoRez ? manoRez.data : [];
         paskaituKlausimai = paskaituRez ? paskaituRez.data : [];
+        medziaguKlausimai = medziaguRez ? medziaguRez.data : [];
 
         const numatytaTvarka = [
             'Šiluminės elektrinės',
@@ -624,6 +623,8 @@
             ...numatytaTvarka.filter(t => rastosTemos.includes(t)),
             ...rastosTemos.filter(t => !numatytaTvarka.includes(t))
         ];
+
+        medziaguTemos = [...new Set(medziaguKlausimai.map(q => q.tema).filter(Boolean))];
 
         document.getElementById('mano-count').innerText = `${manoKlausimai.length} klaus.`;
         document.getElementById('mano-label').classList.toggle('disabled', manoKlausimai.length === 0);
@@ -645,16 +646,32 @@
             topicList.appendChild(label);
         });
 
+        const materialsList = document.getElementById('materials-topic-list');
+        materialsList.innerHTML = '';
+
+        medziaguTemos.forEach((tema, index) => {
+            const count = medziaguKlausimai.filter(q => q.tema === tema).length;
+            const id = `materials-topic-${index}`;
+            const label = document.createElement('label');
+            label.className = 'topic-checkbox' + (count === 0 ? ' disabled' : '');
+            label.innerHTML = `
+                <input type="checkbox" id="${id}" class="materials-topic" value="${escapeHtmlAttribute(tema)}" ${count === 0 ? 'disabled' : ''}>
+                <span>${escapeHtml(tema)}</span>
+                <span class="topic-count">${count} klaus.</span>
+            `;
+            materialsList.appendChild(label);
+        });
+
         updateSelectionSummary();
 
-        const available = getSelectedQuestionPool().length;
-        if (available > 0) {
-            startBtn.disabled = false;
-            startBtn.innerText = 'Pradėti testą';
-            status.innerText = `Paruošta: ${manoKlausimai.length} profesinės mokyklos egzamino klausimų + ${paskaituKlausimai.length} elektros energijos gamybos technologijų paskaitų klausimų.`;
+        // Leisime pradėti testą tik jei vartotojas aktyviai kažką pažymės.
+        // Numatytasis mygtuko statusas – "Pasirinkite klausimų šaltinį".
+        startBtn.disabled = true;
+        startBtn.innerText = 'Pasirinkite klausimų šaltinį';
+        
+        if (manoKlausimai.length > 0 || paskaituKlausimai.length > 0 || medziaguKlausimai.length > 0) {
+            status.innerText = `Užkrauta: ${manoKlausimai.length} bendros bazės + ${paskaituKlausimai.length} gamybos technologijų + ${medziaguKlausimai.length} medžiagų klausimų.`;
         } else {
-            startBtn.disabled = true;
-            startBtn.innerText = 'Pasirinkite klausimų šaltinį';
             status.innerHTML = `<span style="color:var(--danger);">Nepavyko užkrauti nė vieno klausimų šaltinio.</span>`;
         }
     }
@@ -675,24 +692,25 @@
     function bindSourceSelectionEvents() {
         document.getElementById('source-mano').addEventListener('change', updateSelectionSummary);
         document.getElementById('lecture-topic-list').addEventListener('change', updateSelectionSummary);
+        document.getElementById('materials-topic-list').addEventListener('change', updateSelectionSummary);
     }
 
-    function selectAllLectureTopics(checked) {
-        document.querySelectorAll('.lecture-topic:not(:disabled)').forEach(input => {
+    function selectAllSources(checked) {
+        const mano = document.getElementById('source-mano');
+        if (mano && !mano.disabled) mano.checked = checked;
+        
+        document.querySelectorAll('.lecture-topic:not(:disabled), .materials-topic:not(:disabled)').forEach(input => {
             input.checked = checked;
         });
         updateSelectionSummary();
     }
 
-    function selectAllSources(checked) {
-        const mano = document.getElementById('source-mano');
-        if (!mano.disabled) mano.checked = checked;
-        selectAllLectureTopics(checked);
-        updateSelectionSummary();
-    }
-
     function getSelectedLectureTopics() {
         return [...document.querySelectorAll('.lecture-topic:checked')].map(input => input.value);
+    }
+
+    function getSelectedMaterialsTopics() {
+        return [...document.querySelectorAll('.materials-topic:checked')].map(input => input.value);
     }
 
     function getSelectedQuestionPool() {
@@ -708,17 +726,28 @@
                 .forEach(q => pool.push({ ...q, saltinis: 'Elektros energijos gamybos technologijos – paskaitų temos', pasirinkimoTema: tema }));
         });
 
+        getSelectedMaterialsTopics().forEach(tema => {
+            medziaguKlausimai
+                .filter(q => q.tema === tema)
+                .forEach(q => pool.push({ ...q, saltinis: 'Elektrotechninės medžiagos', pasirinkimoTema: tema }));
+        });
+
         return pool;
     }
 
     function updateSelectionSummary() {
         const parts = [];
         if (document.getElementById('source-mano')?.checked && manoKlausimai.length) {
-            parts.push(`Elektrikų egzaminas – profesinė mokykla (${manoKlausimai.length})`);
+            parts.push(`Profesinė bazė (${manoKlausimai.length})`);
         }
 
         getSelectedLectureTopics().forEach(tema => {
             const count = paskaituKlausimai.filter(q => q.tema === tema).length;
+            parts.push(`${tema} (${count})`);
+        });
+
+        getSelectedMaterialsTopics().forEach(tema => {
+            const count = medziaguKlausimai.filter(q => q.tema === tema).length;
             parts.push(`${tema} (${count})`);
         });
 
@@ -738,7 +767,6 @@
         startBtn.innerText = total > 0 ? 'Pradėti testą' : 'Nėra klausimų';
     }
 
-    /* ---------- DARK MODE VALDYMAS ---------- */
     function initTheme() {
         const savedTheme = localStorage.getItem('elektrikTheme');
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -753,10 +781,9 @@
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
         localStorage.setItem('elektrikTheme', isDark ? 'dark' : 'light');
-        document.getElementById('theme-toggle').innerText = isDark ? '☀️' : '🌙';
+        document.getElementById('theme-toggle').innerText = isDark ? '☀️️' : '🌙';
     }
 
-    /* ---------- STATISTIKOS VALDYMAS ---------- */
     function renderStats() {
         let stats = JSON.parse(localStorage.getItem('elektrikStats')) || [];
         const panel = document.getElementById('stats-panel');
@@ -795,7 +822,6 @@
         localStorage.setItem('elektrikStats', JSON.stringify(stats));
     }
 
-    /* ---------- TESTO LOGIKA ---------- */
     function startTest() {
         const pasirinktasBase = getSelectedQuestionPool();
         if (pasirinktasBase.length === 0) {
