@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elektrikų egzaminas – profesinė mokykla</title>
+    <title>Elektrikų mokymosi testai</title>
     <style>
         /* Universali taisyklė, apsauganti nuo išsiliejimo į šonus */
         * {
@@ -150,6 +150,118 @@
             font-weight: 700;
             margin-bottom: 20px;
             text-align: center;
+        }
+
+        /* Pirmo ir antro lygio išskleidžiami meniu */
+        .subject-dropdown,
+        .nested-dropdown {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--nav-bg);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .dropdown-header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            color: var(--text-main);
+            border: none;
+            border-radius: 0;
+            padding: 16px 18px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .dropdown-header:hover {
+            background: rgba(127, 127, 127, 0.08);
+        }
+
+        .dropdown-header .chevron {
+            width: 18px;
+            flex: 0 0 18px;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .subject-dropdown.open > .dropdown-header .chevron,
+        .nested-dropdown.open > .dropdown-header .chevron {
+            transform: rotate(90deg);
+        }
+
+        .dropdown-header .dropdown-label {
+            flex: 1;
+        }
+
+        .dropdown-header .dropdown-count {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .dropdown-header .bulk-checkbox {
+            width: 18px;
+            height: 18px;
+            flex: 0 0 18px;
+            margin: 0 2px 0 0;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .dropdown-header .bulk-checkbox:indeterminate {
+            accent-color: var(--primary);
+        }
+
+        .nested-dropdown .dropdown-header .bulk-checkbox {
+            width: 16px;
+            height: 16px;
+            flex-basis: 16px;
+        }
+
+        .dropdown-content {
+            display: none;
+            padding: 0 18px 18px;
+        }
+
+        .subject-dropdown.open > .dropdown-content,
+        .nested-dropdown.open > .dropdown-content {
+            display: block;
+        }
+
+        .subject-dropdown > .dropdown-content {
+            padding-top: 4px;
+        }
+
+        .nested-dropdown {
+            margin: 4px 0 10px;
+            background: var(--container-bg);
+        }
+
+        .nested-dropdown .dropdown-header {
+            padding: 13px 14px;
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        .nested-dropdown .dropdown-content {
+            padding: 0 12px 12px;
+        }
+
+        .topic-list + .topic-list {
+            margin-top: 8px;
+        }
+
+        .topic-section-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin: 8px 0 8px;
         }
 
         .subject-group {
@@ -446,7 +558,7 @@
 
 <div class="container">
     <div id="start-screen" class="screen active">
-        <h1>Elektrikų Egzaminas</h1>
+        <h1>Elektrikų mokymosi testai</h1>
         <p id="db-status" style="text-align: center; color: var(--text-muted); margin: 10px auto;">
             Kraunami klausimai...
         </p>
@@ -454,28 +566,48 @@
         <div class="topic-panel">
             <div class="topic-title">Pasirinkite, iš kurių temų norite sudaryti testą</div>
 
-            <!-- 1 Blokas: Profesinės mokyklos baigiamasis -->
-            <div class="subject-group">
-                <div class="subject-group-title">Bendra profesijos bazė</div>
-                <div class="topic-list">
-                    <label class="topic-checkbox" id="mano-label">
-                        <input type="checkbox" id="source-mano">
-                        <span>Elektrikų egzaminas – profesinė mokykla</span>
-                        <span class="topic-count" id="mano-count">0 klaus.</span>
-                    </label>
+            <!-- 1 lygis: Profesinės mokyklos klausimai -->
+            <div class="subject-dropdown" id="prof-subject-dropdown">
+                <div class="dropdown-header" role="button" tabindex="0" onclick="toggleDropdown(this)" onkeydown="handleDropdownKeydown(event, this)" aria-expanded="false">
+                    <input type="checkbox" class="bulk-checkbox" id="mano-master" title="Pažymėti visas profesinės mokyklos klausimų temas" onclick="event.stopPropagation()" onchange="toggleProfessionalSource(this.checked)">
+                    <span class="chevron">›</span>
+                    <span class="dropdown-label">Profesinės mokyklos klausimai</span>
+                    <span class="dropdown-count" id="mano-count">0 klaus.</span>
+                </div>
+                <div class="dropdown-content">
+                    <div class="topic-list">
+                        <label class="topic-checkbox" id="mano-label">
+                            <input type="checkbox" id="source-mano">
+                            <span>Profesinės mokyklos klausimai</span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
-            <!-- 2 Blokas: Gamybos technologijos -->
-            <div class="subject-group">
-                <div class="subject-group-title">Elektros energijos gamybos technologijos</div>
-                <div class="topic-list" id="lecture-topic-list"></div>
+            <!-- 1 lygis: Elektrotechninės medžiagos -->
+            <div class="subject-dropdown" id="materials-subject-dropdown">
+                <div class="dropdown-header" role="button" tabindex="0" onclick="toggleDropdown(this)" onkeydown="handleDropdownKeydown(event, this)" aria-expanded="false">
+                    <input type="checkbox" class="bulk-checkbox" id="materials-master" title="Pažymėti visas elektrotechninių medžiagų temas" onclick="event.stopPropagation()" onchange="toggleSubjectTopics('materials-topic', this.checked)">
+                    <span class="chevron">›</span>
+                    <span class="dropdown-label">Elektrotechninės medžiagos</span>
+                    <span class="dropdown-count" id="materials-total-count">0 klaus.</span>
+                </div>
+                <div class="dropdown-content">
+                    <div id="materials-topic-groups"></div>
+                </div>
             </div>
 
-            <!-- 3 Blokas: Elektrotechninės medžiagos -->
-            <div class="subject-group">
-                <div class="subject-group-title">Elektrotechninės medžiagos</div>
-                <div class="topic-list" id="materials-topic-list"></div>
+            <!-- 1 lygis: Elektros energijos gamybos technologijos -->
+            <div class="subject-dropdown" id="energy-subject-dropdown">
+                <div class="dropdown-header" role="button" tabindex="0" onclick="toggleDropdown(this)" onkeydown="handleDropdownKeydown(event, this)" aria-expanded="false">
+                    <input type="checkbox" class="bulk-checkbox" id="lecture-master" title="Pažymėti visas elektros energijos gamybos technologijų temas" onclick="event.stopPropagation()" onchange="toggleSubjectTopics('lecture-topic', this.checked)">
+                    <span class="chevron">›</span>
+                    <span class="dropdown-label">Elektros energijos gamybos technologijos</span>
+                    <span class="dropdown-count" id="lecture-total-count">0 klaus.</span>
+                </div>
+                <div class="dropdown-content">
+                    <div id="lecture-topic-groups"></div>
+                </div>
             </div>
 
             <div class="selection-actions">
@@ -630,38 +762,33 @@
         document.getElementById('mano-label').classList.toggle('disabled', manoKlausimai.length === 0);
         document.getElementById('source-mano').disabled = manoKlausimai.length === 0;
 
-        const topicList = document.getElementById('lecture-topic-list');
-        topicList.innerHTML = '';
+        document.getElementById('materials-total-count').innerText = `${medziaguKlausimai.length} klaus.`;
+        document.getElementById('lecture-total-count').innerText = `${paskaituKlausimai.length} klaus.`;
 
-        paskaituTemos.forEach((tema, index) => {
-            const count = paskaituKlausimai.filter(q => q.tema === tema).length;
-            const id = `topic-${index}`;
-            const label = document.createElement('label');
-            label.className = 'topic-checkbox' + (count === 0 ? ' disabled' : '');
-            label.innerHTML = `
-                <input type="checkbox" id="${id}" class="lecture-topic" value="${escapeHtmlAttribute(tema)}" ${count === 0 ? 'disabled' : ''}>
-                <span>${escapeHtml(tema)}</span>
-                <span class="topic-count">${count} klaus.</span>
-            `;
-            topicList.appendChild(label);
+        renderTopicGroups({
+            containerId: 'materials-topic-groups',
+            topics: medziaguTemos,
+            questions: medziaguKlausimai,
+            checkboxClass: 'materials-topic',
+            idPrefix: 'materials-topic',
+            groups: [
+                { title: '1 atsiskaitymas', start: 0, end: 4 }
+            ]
         });
 
-        const materialsList = document.getElementById('materials-topic-list');
-        materialsList.innerHTML = '';
-
-        medziaguTemos.forEach((tema, index) => {
-            const count = medziaguKlausimai.filter(q => q.tema === tema).length;
-            const id = `materials-topic-${index}`;
-            const label = document.createElement('label');
-            label.className = 'topic-checkbox' + (count === 0 ? ' disabled' : '');
-            label.innerHTML = `
-                <input type="checkbox" id="${id}" class="materials-topic" value="${escapeHtmlAttribute(tema)}" ${count === 0 ? 'disabled' : ''}>
-                <span>${escapeHtml(tema)}</span>
-                <span class="topic-count">${count} klaus.</span>
-            `;
-            materialsList.appendChild(label);
+        renderTopicGroups({
+            containerId: 'lecture-topic-groups',
+            topics: paskaituTemos,
+            questions: paskaituKlausimai,
+            checkboxClass: 'lecture-topic',
+            idPrefix: 'lecture-topic',
+            groups: [
+                { title: '1 atsiskaitymas', start: 0, end: 4 },
+                { title: '2 atsiskaitymas', start: 4, end: 8 }
+            ]
         });
 
+        updateParentCheckboxes();
         updateSelectionSummary();
 
         // Leisime pradėti testą tik jei vartotojas aktyviai kažką pažymės.
@@ -670,9 +797,204 @@
         startBtn.innerText = 'Pasirinkite klausimų šaltinį';
         
         if (manoKlausimai.length > 0 || paskaituKlausimai.length > 0 || medziaguKlausimai.length > 0) {
-            status.innerText = `Užkrauta: ${manoKlausimai.length} bendros bazės + ${paskaituKlausimai.length} gamybos technologijų + ${medziaguKlausimai.length} medžiagų klausimų.`;
+            status.innerText = `Užkrauta: ${manoKlausimai.length} bendros bazės + ${paskaituKlausimai.length} elektros energetikos + ${medziaguKlausimai.length} medžiagų klausimų.`;
         } else {
             status.innerHTML = `<span style="color:var(--danger);">Nepavyko užkrauti nė vieno klausimų šaltinio.</span>`;
+        }
+    }
+
+    function toggleDropdown(header) {
+        const dropdown = header.parentElement;
+        const isOpen = dropdown.classList.toggle('open');
+        header.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    function handleDropdownKeydown(event, header) {
+        if (event.target !== header) return;
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            toggleDropdown(header);
+        }
+    }
+
+    function toggleProfessionalSource(checked) {
+        const source = document.getElementById('source-mano');
+        if (source && !source.disabled) {
+            source.checked = checked;
+        }
+        updateSelectionSummary();
+    }
+
+    function toggleSubjectTopics(checkboxClass, checked) {
+        document.querySelectorAll(`.${checkboxClass}:not(:disabled)`).forEach(input => {
+            input.checked = checked;
+        });
+        updateParentCheckboxes();
+        updateSelectionSummary();
+    }
+
+    function toggleTopicRange(checkboxClass, topics, start, end, checked) {
+        for (let i = start; i < end; i++) {
+            const input = document.querySelector(`.${checkboxClass}[id$="-${i}"]`);
+            if (input && !input.disabled) input.checked = checked;
+        }
+        updateParentCheckboxes();
+    }
+
+    function syncCheckboxState(master, inputs) {
+        const enabled = [...inputs].filter(input => !input.disabled);
+        const checked = enabled.filter(input => input.checked);
+        master.checked = enabled.length > 0 && checked.length === enabled.length;
+        master.indeterminate = checked.length > 0 && checked.length < enabled.length;
+        if (enabled.length === 0) {
+            master.checked = false;
+            master.indeterminate = false;
+            master.disabled = true;
+        } else {
+            master.disabled = false;
+        }
+    }
+
+    function updateParentCheckboxes() {
+        const materialsInputs = document.querySelectorAll('.materials-topic');
+        const lectureInputs = document.querySelectorAll('.lecture-topic');
+        const materialsMaster = document.getElementById('materials-master');
+        const lectureMaster = document.getElementById('lecture-master');
+        if (materialsMaster) syncCheckboxState(materialsMaster, materialsInputs);
+        if (lectureMaster) syncCheckboxState(lectureMaster, lectureInputs);
+
+        document.querySelectorAll('.nested-dropdown').forEach(wrapper => {
+            const master = wrapper.querySelector('.group-master');
+            if (!master) return;
+            const inputs = wrapper.querySelectorAll('.topic-checkbox input[type="checkbox"]');
+            syncCheckboxState(master, inputs);
+        });
+
+        const profMaster = document.getElementById('mano-master');
+        const profSource = document.getElementById('source-mano');
+        if (profMaster && profSource) {
+            profMaster.checked = profSource.checked;
+            profMaster.indeterminate = false;
+            profMaster.disabled = profSource.disabled;
+        }
+    }
+
+    function createTopicCheckbox(tema, count, checkboxClass, id) {
+        const label = document.createElement('label');
+        label.className = 'topic-checkbox' + (count === 0 ? ' disabled' : '');
+        label.innerHTML = `
+            <input type="checkbox" id="${id}" class="${checkboxClass}" value="${escapeHtmlAttribute(tema)}" ${count === 0 ? 'disabled' : ''}>
+            <span>${escapeHtml(tema)}</span>
+            <span class="topic-count">${count} klaus.</span>
+        `;
+        return label;
+    }
+
+    function renderTopicGroups({ containerId, topics, questions, checkboxClass, idPrefix, groups }) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+
+        const groupedIndexes = new Set();
+
+        groups.forEach((group, groupIndex) => {
+            const start = Math.max(0, group.start);
+            const end = Math.min(topics.length, group.end);
+            if (start >= end) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'nested-dropdown';
+
+            const header = document.createElement('div');
+            header.className = 'dropdown-header';
+            header.setAttribute('role', 'button');
+            header.setAttribute('tabindex', '0');
+            header.setAttribute('aria-expanded', 'false');
+
+            const groupCount = topics.slice(start, end).reduce((sum, tema) => {
+                return sum + questions.filter(q => q.tema === tema).length;
+            }, 0);
+
+            header.innerHTML = `
+                <input type="checkbox" class="bulk-checkbox group-master" title="Pažymėti visas ${escapeHtml(group.title)} temas" onclick="event.stopPropagation()">
+                <span class="chevron">›</span>
+                <span class="dropdown-label">${escapeHtml(group.title)}</span>
+                <span class="dropdown-count">${groupCount} klaus.</span>
+            `;
+            const groupMaster = header.querySelector('.group-master');
+            groupMaster.dataset.checkboxClass = checkboxClass;
+            groupMaster.dataset.start = String(start);
+            groupMaster.dataset.end = String(end);
+            groupMaster.addEventListener('change', () => {
+                toggleTopicRange(checkboxClass, topics, start, end, groupMaster.checked);
+                updateSelectionSummary();
+            });
+            header.onclick = (event) => { if (!event.target.closest('.bulk-checkbox')) toggleDropdown(header); };
+            header.onkeydown = (event) => handleDropdownKeydown(event, header);
+
+            const content = document.createElement('div');
+            content.className = 'dropdown-content';
+
+            const list = document.createElement('div');
+            list.className = 'topic-list';
+
+            for (let i = start; i < end; i++) {
+                const tema = topics[i];
+                const count = questions.filter(q => q.tema === tema).length;
+                const id = `${idPrefix}-${i}`;
+                list.appendChild(createTopicCheckbox(tema, count, checkboxClass, id));
+                groupedIndexes.add(i);
+            }
+
+            content.appendChild(list);
+            wrapper.appendChild(header);
+            wrapper.appendChild(content);
+            container.appendChild(wrapper);
+        });
+
+        const remaining = topics
+            .map((tema, index) => ({ tema, index }))
+            .filter(item => !groupedIndexes.has(item.index));
+
+        if (remaining.length > 0) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'nested-dropdown';
+
+            const header = document.createElement('div');
+            header.className = 'dropdown-header';
+            header.setAttribute('role', 'button');
+            header.setAttribute('tabindex', '0');
+            header.setAttribute('aria-expanded', 'false');
+            header.innerHTML = `
+                <input type="checkbox" class="bulk-checkbox group-master" title="Pažymėti visas kitas temas" onclick="event.stopPropagation()">
+                <span class="chevron">›</span>
+                <span class="dropdown-label">Kitos temos</span>
+                <span class="dropdown-count">${remaining.reduce((sum, item) => sum + questions.filter(q => q.tema === item.tema).length, 0)} klaus.</span>
+            `;
+            const groupMaster = header.querySelector('.group-master');
+            groupMaster.addEventListener('change', () => {
+                remaining.forEach(({ index }) => {
+                    const input = document.getElementById(`${idPrefix}-${index}`);
+                    if (input && !input.disabled) input.checked = groupMaster.checked;
+                });
+                updateSelectionSummary();
+            });
+            header.onclick = (event) => { if (!event.target.closest('.bulk-checkbox')) toggleDropdown(header); };
+            header.onkeydown = (event) => handleDropdownKeydown(event, header);
+
+            const content = document.createElement('div');
+            content.className = 'dropdown-content';
+            const list = document.createElement('div');
+            list.className = 'topic-list';
+
+            remaining.forEach(({ tema, index }) => {
+                const count = questions.filter(q => q.tema === tema).length;
+                list.appendChild(createTopicCheckbox(tema, count, checkboxClass, `${idPrefix}-${index}`));
+            });
+
+            content.appendChild(list);
+            wrapper.appendChild(header);
+            wrapper.appendChild(content);
+            container.appendChild(wrapper);
         }
     }
 
@@ -690,9 +1012,18 @@
     }
 
     function bindSourceSelectionEvents() {
-        document.getElementById('source-mano').addEventListener('change', updateSelectionSummary);
-        document.getElementById('lecture-topic-list').addEventListener('change', updateSelectionSummary);
-        document.getElementById('materials-topic-list').addEventListener('change', updateSelectionSummary);
+        document.getElementById('source-mano').addEventListener('change', () => {
+            updateParentCheckboxes();
+            updateSelectionSummary();
+        });
+        document.getElementById('lecture-topic-groups').addEventListener('change', () => {
+            updateParentCheckboxes();
+            updateSelectionSummary();
+        });
+        document.getElementById('materials-topic-groups').addEventListener('change', () => {
+            updateParentCheckboxes();
+            updateSelectionSummary();
+        });
     }
 
     function selectAllSources(checked) {
@@ -702,6 +1033,7 @@
         document.querySelectorAll('.lecture-topic:not(:disabled), .materials-topic:not(:disabled)').forEach(input => {
             input.checked = checked;
         });
+        updateParentCheckboxes();
         updateSelectionSummary();
     }
 
@@ -718,7 +1050,7 @@
         const useMano = document.getElementById('source-mano')?.checked;
         const selectedTopics = getSelectedLectureTopics();
 
-        if (useMano) pool.push(...manoKlausimai.map(q => ({ ...q, saltinis: 'Elektrikų egzaminas – profesinė mokykla', pasirinkimoTema: 'Elektrikų egzaminas – profesinė mokykla' })));
+        if (useMano) pool.push(...manoKlausimai.map(q => ({ ...q, saltinis: 'Profesinės mokyklos klausimai', pasirinkimoTema: 'Profesinės mokyklos klausimai' })));
 
         selectedTopics.forEach(tema => {
             paskaituKlausimai
